@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.service.MealService;
 
 @Controller
 public class RootController {
@@ -18,7 +20,10 @@ public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
     @Autowired
-    private UserService service;
+    private UserService userService;
+
+    @Autowired
+    private MealService mealService;
 
     @GetMapping("/")
     public String root() {
@@ -29,7 +34,7 @@ public class RootController {
     @GetMapping("/users")
     public String getUsers(Model model) {
         log.info("users");
-        model.addAttribute("users", service.getAll());
+        model.addAttribute("users", userService.getAll());
         return "users";
     }
 
@@ -39,6 +44,14 @@ public class RootController {
         log.info("setUser {}", userId);
         SecurityUtil.setAuthUserId(userId);
         return "redirect:meals";
+    }
+
+    @GetMapping("/meals")
+    public String getMeals(Model model) {
+        log.info("meals");
+        model.addAttribute("meals",
+                MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        return "meals";
     }
 
 }
