@@ -20,9 +20,6 @@ public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private MealService mealService;
 
     @GetMapping("/")
@@ -32,9 +29,8 @@ public class RootController {
     }
 
     @GetMapping("/users")
-    public String getUsers(Model model) {
+    public String getUsers() {
         log.info("users");
-        model.addAttribute("users", userService.getAll());
         return "users";
     }
 
